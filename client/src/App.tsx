@@ -1,5 +1,7 @@
+import Router from "./routing/Router";
+
 function App() {
-  return <div>checkmate</div>
+  return <Router/>
 }
 
 export default App;
