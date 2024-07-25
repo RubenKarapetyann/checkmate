@@ -16,3 +16,8 @@ export type RowProps = {
     row : number,
     handle : CellHandle
 }
+
+export type BoardProps = {
+    matrix : Matrix,
+    handle : CellHandle
+}
