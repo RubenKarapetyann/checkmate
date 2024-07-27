@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .constants import apps
+from constants.api import API, V1
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-] + [path(app.path, include(app.url, namespace=app.namespace)) for app in apps]
+] + [path(f"{API}/{V1}/" + app.path, include(app.url, namespace=app.namespace)) for app in apps]
