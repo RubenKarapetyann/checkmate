@@ -1,19 +1,19 @@
 import { CONTENT_TYPES, METHODS } from "../constants/api";
+import { fetchDataProps } from "../types/api/fetches";
 
-export const fetchData = async (
-    url: string, 
-    method: METHODS=METHODS.GET, 
-    data?: Object, 
-    contentType: CONTENT_TYPES=CONTENT_TYPES.APPLICATION_JSON
-)=>{
+export const fetchData = async ({
+    url, 
+    method=METHODS.GET, 
+    data,
+    headers={"Content-Type" : CONTENT_TYPES.APPLICATION_JSON}
+}:fetchDataProps)=>{
     try {
         const options = {
             method,
-            headers: {
-                "Content-Type": contentType,
-            },
+            headers,
             body : JSON.stringify(data)
         }
+
         const response = await fetch(url, options)
         return await response.json()
     }catch (err){
