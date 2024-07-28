@@ -1,7 +1,7 @@
 import { Button, FormControl, FormHelperText, TextField } from "@mui/material"
 import { ChangeEvent, FormEvent, useState } from "react"
-import { useSelector } from "react-redux"
-import { selectError, selectLoading } from "../../../features/authentication/authenticationSlice"
+import { login, selectError, selectLoading } from "../../../features/authentication/authenticationSlice"
+import { useAppDispatch, useAppSelector } from "../../../app/hooks"
 
 const generalProps = {
     size : "small" as "small",
@@ -11,11 +11,12 @@ const generalProps = {
 
 export default function LoginForm(){
     const [fields, setFields] = useState({
-        "username" : "",
-        "password" : "",
+        username : "",
+        password : "",
     })
-    const error = useSelector(selectError)
-    const isLoading = useSelector(selectLoading)
+    const error = useAppSelector(selectError)
+    const isLoading = useAppSelector(selectLoading)
+    const dispatch = useAppDispatch()
 
     const onChange = (event: ChangeEvent<HTMLInputElement>, field: "username" | "password")=>{
         setFields(fields=>({...fields, [field] : event.target.value}))
@@ -23,7 +24,7 @@ export default function LoginForm(){
 
     const onSubmit = (event: FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        console.log(fields)
+        dispatch(login(fields))
     }
 
     return (
