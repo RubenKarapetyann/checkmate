@@ -4,7 +4,9 @@ import { AuthenticationState } from '../../types/redux/state';
 
 const initialState: AuthenticationState = {
     user : null,
-    IsAuthenticated : false
+    IsAuthenticated : false,
+    error : null,
+    isLoading : false
 }
 
 export const authenticationSlice = createSlice({
@@ -17,5 +19,7 @@ export const authenticationSlice = createSlice({
 export const { } = authenticationSlice.actions;
 
 export const selectUser = (state: RootState) => state.authentication.user;
+export const selectError = (state: RootState) => state.authentication.error;
+export const selectLoading = (state: RootState) => state.authentication.isLoading;
 
 export default authenticationSlice.reducer;
