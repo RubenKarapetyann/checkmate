@@ -1,7 +1,7 @@
 import { Button, FormControl, FormHelperText, TextField } from "@mui/material"
 import { ChangeEvent } from "react"
 import { inputConfig } from "../globalProps"
-import useLogin from "../../../hooks/useLogin"
+import useLogin from "../../../hooks/forms/useLogin"
 
 export default function LoginForm(){
     const { fields, onChange, onSubmit, error, isLoading } = useLogin()

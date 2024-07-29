@@ -40,10 +40,14 @@ export const authenticationSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action)=>{
         state.isLoading = false
-        if(action.payload.auth_token){
-          setItemToStorage(TOKEN, action.payload.auth_token)
-        }else{
-          state.error = "username or password is incorrect"
+        try {
+          if(action.payload.auth_token){
+            setItemToStorage(TOKEN, action.payload.auth_token)
+          }else{
+            state.error = "username or password is incorrect"
+          }
+        }catch(err){
+          state.error = "something went wrong, try again please"
         }
       })
   }
