@@ -1,47 +1,35 @@
-import { Button, FormControl, TextField } from "@mui/material"
-import { ChangeEvent, FormEvent, useState } from "react"
-
-const generalProps = {
-    size : "small" as "small",
-    required : true,
-    margin : "normal" as "normal"
-}
+import { Button, FormControl, FormHelperText, TextField } from "@mui/material"
+import { ChangeEvent } from "react"
+import { inputConfig } from "../globalProps"
+import useLogin from "../../../hooks/forms/useLogin"
 
 export default function LoginForm(){
-    const [fields, setFields] = useState({
-        "username" : "",
-        "password" : "",
-    })
-
-    const onChange = (event: ChangeEvent<HTMLInputElement>, field: "username" | "password")=>{
-        setFields(fields=>({...fields, [field] : event.target.value}))
-    }
-
-    const onSubmit = (event: FormEvent<HTMLFormElement>)=>{
-        event.preventDefault()
-        console.log(fields)
-    }
+    const { fields, onChange, onSubmit, error, isLoading } = useLogin()
 
     return (
         <form onSubmit={onSubmit}>
             <FormControl sx={{ padding : "50px" }}>
                 <TextField
                     label="Username"
-                    {...generalProps}
+                    {...inputConfig}
                     value={fields.username}
+                    error={Boolean(error)}
                     onChange={(e:ChangeEvent<HTMLInputElement>)=>onChange(e, "username")}
                 />
                 <TextField
                     label="Password"
                     type="password"
-                    {...generalProps}
+                    error={Boolean(error)}
+                    {...inputConfig}
                     value={fields.password}
                     onChange={(e:ChangeEvent<HTMLInputElement>)=>onChange(e, "password")}
                 />
+                {error && <FormHelperText sx={{color : "red"}}>{error}</FormHelperText>}
                 <br />
                 <Button
                     variant="contained"
                     type="submit"
+                    disabled={isLoading}
                 >Sign in</Button>
             </FormControl>
         </form>
