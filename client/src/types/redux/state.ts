@@ -1,5 +1,7 @@
 export interface AuthenticationState {
     user : Object | null,
-    IsAuthenticated : boolean
+    IsAuthenticated : boolean,
+    error : null | string,
+    isLoading : boolean
 }
   
