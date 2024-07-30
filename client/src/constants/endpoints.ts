@@ -7,3 +7,4 @@ export const LOGIN = `${PREFIX}/${AUTH_NAMESPACE}/token/login`
 
 // socket endpoints
 export const GAME = `${WS_PREFIX}/game`
+export const LOBBY = `${WS_PREFIX}/lobby`
