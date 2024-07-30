@@ -15,3 +15,9 @@ class AppConstant(Constant):
         super().__init__(path)
         self.view = view
         self.name = name
+
+
+class SocketConstant(Constant):
+    def __init__(self, path, view):
+        self.path = path
+        self.view = view

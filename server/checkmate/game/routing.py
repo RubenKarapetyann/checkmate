@@ -1,6 +1,7 @@
 from django.urls import path
-from .consumers import GameConsumer
+from .channels_constants import wsRoutes
+from constants.api import API, V1, WS
 
-websocket_urlpatterns = [
-    path("ws/game/", GameConsumer.as_asgi()),
-]
+PREFIX = f"{WS}/{API}/{V1}/"
+
+websocket_urlpatterns = [path(PREFIX + route.path, route.view) for route in wsRoutes]
