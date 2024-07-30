@@ -9,3 +9,8 @@ class GameConsumer(WebsocketConsumer):
     
     def receive(self, text_data):
         self.send(text_data=text_data)
+        
+        
+class LobbyConsumer(WebsocketConsumer):
+    def connect(self):
+        self.accept()
