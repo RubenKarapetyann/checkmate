@@ -5,7 +5,9 @@ from django.db.models import (
     TextField,
     IntegerField,
     TextChoices,
-    ManyToManyField
+    ManyToManyField,
+    OneToOneField,
+    CASCADE
 )
 from users.models import User
 from .chess.modes.classic import CLASSIC as CLASSIC_MODE
@@ -40,3 +42,14 @@ def players_changed(sender, **kwargs):
 
 
 m2m_changed.connect(players_changed, sender=Game.players.through)
+
+
+class Lobby(Model):
+    player = OneToOneField(User, on_delete=CASCADE, verbose_name="Player", related_name="lobby")
+    created_date = DateTimeField(auto_now_add=True, verbose_name="Searching since")
+    mode = CharField(max_length=50, choices=Game.Mode, default=Game.Mode.CLASSIC, verbose_name="Mode")
+
+    
+    class Meta:
+        verbose_name = "lobby"
+        verbose_name_plural = "lobbies"
