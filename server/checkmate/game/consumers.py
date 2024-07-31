@@ -1,5 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer
-from .models import Lobby
+from .models import Lobby, Game
 from users.models import User
 from .utils import userIsAuthenticated
 
@@ -21,6 +21,9 @@ class LobbyConsumer(WebsocketConsumer):
         if not userIsAuthenticated(user):
             # login requared is temporary
             return self.close(code=4000)
+        
+        if user.game.exists():
+            self.close(code=4500)
              
         self.accept()
         self.send(f"user {user.id} connected")
@@ -28,9 +31,17 @@ class LobbyConsumer(WebsocketConsumer):
         try:
             if user.lobby:
                 return self.send(f"user is in lobby #{user.lobby.id}")
-            raise Lobby.DoesNotExist
         except Lobby.DoesNotExist:
-            Lobby.objects.create(player=user)
+            lobbies = Lobby.objects.all()
+            if lobbies.exists():
+                lobby = lobbies[0]
+                player = lobby.player
+                game = Game.objects.create()
+                game.players.add(user, player)
+                game.save()
+                lobby.delete()
+            else:
+                Lobby.objects.create(player=user)
         
 
         
