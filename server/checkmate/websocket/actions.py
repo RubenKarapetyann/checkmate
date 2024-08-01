@@ -1,0 +1,1 @@
+GAME_FOUND = "game-found"
