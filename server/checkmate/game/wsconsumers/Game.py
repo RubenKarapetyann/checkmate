@@ -1,13 +1,40 @@
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from ..mixins import SocketLoginRequiredMixin
+from asgiref.sync import sync_to_async
+from ..models import Game
+from websocket.utils import group_name_creater
 
-class GameConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()
+class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        try:
+            game_id = self.scope["url_route"]["kwargs"]["game_id"]
+            user = self.scope["user"]
+            self.group_name = group_name_creater("game", game_id)
+            game = await sync_to_async(Game.objects.get)(pk=game_id)
+            players = await sync_to_async(game.players.all)()
+                     
+            if user.id not in [player.id async for player in players]:
+                await self.close(code=4150)
+            
+            await self.channel_layer.group_add(
+                self.group_name,
+                self.channel_name
+            )
+            
+            await self.accept()
+        except Game.DoesNotExist:
+            print("game is not created")
+            await self.close(code=4100)
+
         
-    def disconnect(self, close_code):
-        pass
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.group_name , 
+            self.channel_name 
+        )
+
     
-    def receive(self, text_data):
-        self.send(text_data=text_data)
+    async def receive_json(self, content, **kwargs):
+        pass
         
         
