@@ -1,7 +1,9 @@
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer, AsyncJsonWebsocketConsumer
 from .models import Lobby, Game
 from users.models import User
 from .utils import userIsAuthenticated
+from asgiref.sync import sync_to_async
+from websocket.actions import GAME_FOUND
 
 class GameConsumer(WebsocketConsumer):
     def connect(self):
@@ -14,45 +16,78 @@ class GameConsumer(WebsocketConsumer):
         self.send(text_data=text_data)
         
         
-class LobbyConsumer(WebsocketConsumer):
-    def connect(self):
+class LobbyConsumer(AsyncJsonWebsocketConsumer):
+    async def connect(self):
         user: User = self.scope["user"]
         
         if not userIsAuthenticated(user):
             # login requared is temporary
-            return self.close(code=4000)
+            return await self.close(code=4000)
         
-        if user.game.exists():
-            self.close(code=4500)
+        if await sync_to_async(user.game.exists)():
+            return await self.close(code=4500)
              
-        self.accept()
-        self.send(f"user {user.id} connected")
+        await self.accept()
+        await self.send(f"user {user.id} connected")
         
         try:
-            if user.lobby:
-                return self.send(f"user is in lobby #{user.lobby.id}")
+            if await sync_to_async(lambda : user.lobby)():
+                return await self.send(f"user is in lobby #{user.lobby.id}")
         except Lobby.DoesNotExist:
-            lobbies = Lobby.objects.all()
-            if lobbies.exists():
-                lobby = lobbies[0]
-                player = lobby.player
-                game = Game.objects.create()
-                game.players.add(user, player)
-                game.save()
-                lobby.delete()
+            lobbies = await sync_to_async(Lobby.objects.all)()
+            if await sync_to_async(lobbies.exists)():
+                lobby = await sync_to_async(lambda : lobbies[0])()
+                self.group_name = "lobby_" + str(lobby.pk)
+                player = await sync_to_async(lambda : lobby.player)()
+                await self.channel_layer.group_add(
+                    self.group_name,
+                    self.channel_name
+                )
+                game = await sync_to_async(Game.objects.create)()
+                await sync_to_async(game.players.add)(user, player)
+                await sync_to_async(game.save)()
+                await self.channel_layer.group_send(
+                    self.group_name, 
+                    { 
+                        "type" : "game_found", 
+                        "data" : {
+                            "game_id" : game.id
+                        }
+                    } 
+                )
+                await sync_to_async(lobby.delete)()
             else:
-                Lobby.objects.create(player=user)
+                lobby: Lobby = await sync_to_async(Lobby.objects.create)(player=user)
+                self.group_name = "lobby_" + str(lobby.pk)
+                await self.channel_layer.group_add(
+                    self.group_name,
+                    self.channel_name
+                )
         
-
+    async def game_found(self, content, **kwargs):
+        data = content["data"]
         
-    def disconnect(self, close_code):
+        return await self.send_json({
+            "action" : GAME_FOUND,
+            "data" : {
+                "game_id" : data["game_id"]
+            }
+        })
+        
+        
+    async def disconnect(self, close_code):
         try:
             if close_code == 4000:
                 return
             
             user: User = self.scope["user"]
-            lobby: Lobby = user.lobby
-            lobby.delete()
+            lobby: Lobby = await sync_to_async(lambda : user.lobby)()
+            self.group_name = "lobby_" + str(lobby.pk)
+            await self.channel_layer.group_discard(
+                self.group_name , 
+                self.channel_name 
+            )
+            await sync_to_async(lobby.delete)()
         except Lobby.DoesNotExist:
             pass
 
