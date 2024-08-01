@@ -66,6 +66,10 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
                 return
             
             user: User = self.scope["user"]
+            if not userIsAuthenticated(user):
+                # login requared is temporary
+                return await self.close(code=4000)
+            
             lobby: Lobby = await sync_to_async(lambda : user.lobby)()
             self.group_name = group_name_creater("lobby", lobby.pk)
             await self.channel_layer.group_discard(
