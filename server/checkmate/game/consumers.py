@@ -4,6 +4,7 @@ from users.models import User
 from .utils import userIsAuthenticated
 from asgiref.sync import sync_to_async
 from websocket.actions import GAME_FOUND
+from websocket.utils import action_creater, type_creater, group_name_creater
 
 class GameConsumer(WebsocketConsumer):
     def connect(self):
@@ -37,7 +38,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             lobbies = await sync_to_async(Lobby.objects.all)()
             if await sync_to_async(lobbies.exists)():
                 lobby = await sync_to_async(lambda : lobbies[0])()
-                self.group_name = "lobby_" + str(lobby.pk)
+                self.group_name = group_name_creater("lobby", lobby.pk)
                 player = await sync_to_async(lambda : lobby.player)()
                 await self.channel_layer.group_add(
                     self.group_name,
@@ -48,17 +49,14 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
                 await sync_to_async(game.save)()
                 await self.channel_layer.group_send(
                     self.group_name, 
-                    { 
-                        "type" : "game_found", 
-                        "data" : {
-                            "game_id" : game.id
-                        }
-                    } 
+                    type_creater("game_found", {
+                        "game_id" : game.id
+                    })
                 )
                 await sync_to_async(lobby.delete)()
             else:
                 lobby: Lobby = await sync_to_async(Lobby.objects.create)(player=user)
-                self.group_name = "lobby_" + str(lobby.pk)
+                self.group_name = group_name_creater("lobby", lobby.pk)
                 await self.channel_layer.group_add(
                     self.group_name,
                     self.channel_name
@@ -67,12 +65,9 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
     async def game_found(self, content, **kwargs):
         data = content["data"]
         
-        return await self.send_json({
-            "action" : GAME_FOUND,
-            "data" : {
-                "game_id" : data["game_id"]
-            }
-        })
+        return await self.send_json(action_creater(GAME_FOUND, {
+            "game_id" : data["game_id"]
+        }))
         
         
     async def disconnect(self, close_code):
@@ -82,7 +77,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             
             user: User = self.scope["user"]
             lobby: Lobby = await sync_to_async(lambda : user.lobby)()
-            self.group_name = "lobby_" + str(lobby.pk)
+            self.group_name = group_name_creater("lobby", lobby.pk)
             await self.channel_layer.group_discard(
                 self.group_name , 
                 self.channel_name 
