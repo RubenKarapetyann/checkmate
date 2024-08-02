@@ -1,12 +1,11 @@
 class FigureBase:
-    def __init__(self, row, column, matrix):
+    def __init__(self, row, column, matrix, color):
         self.row = row
         self.column = column
         self.matrix = matrix
-        self.moves = []
         self.number = 0
         self.image = ""
-        self.color = None
+        self.color = color
         self.icon = ""
         self.name = None
         self.m_rows = len(self.matrix)
@@ -16,4 +15,7 @@ class FigureBase:
         pass
     
     def eat(self):
+        pass
+    
+    def get_moves(self):
         pass
