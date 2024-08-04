@@ -3,14 +3,14 @@ from ..constants import BLACK
 
 class Pawn(FigureBase):
     number = 1
-    name = "Pawn"
+    name = "pawn"
     
     def __init__(self, row, column, matrix, color):
         super().__init__(row, column, matrix, color)
         self.number = Pawn.number
-        self.image = f"{FigureBase.figures_img_path}/{color}/pawn.png"
-        self.icon = ""
         self.name = Pawn.name
+        self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
+        self.icon = ""
         self.moves = self.get_moves()
         
         
