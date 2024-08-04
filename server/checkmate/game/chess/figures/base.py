@@ -1,3 +1,5 @@
+import uuid
+
 class FigureBase:
     figures_img_path = "images/game/figues/classic"
     
@@ -12,6 +14,7 @@ class FigureBase:
         self.name = None
         self.m_rows = len(self.matrix)
         self.m_columns = len(self.matrix[0])
+        self.id = f"{uuid.uuid4()}"
         
     def move(self):
         pass
