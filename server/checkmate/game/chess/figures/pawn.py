@@ -8,7 +8,7 @@ class Pawn(FigureBase):
     def __init__(self, row, column, matrix, color):
         super().__init__(row, column, matrix, color)
         self.number = Pawn.number
-        self.image = ""
+        self.image = f"{FigureBase.figures_img_path}/{color}/pawn.png"
         self.icon = ""
         self.name = Pawn.name
         self.moves = self.get_moves()

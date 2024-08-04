@@ -1,4 +1,6 @@
 class FigureBase:
+    figures_img_path = "images/game/figues/classic"
+    
     def __init__(self, row, column, matrix, color):
         self.row = row
         self.column = column
