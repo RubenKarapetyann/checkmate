@@ -3,6 +3,9 @@ from ..mixins import SocketLoginRequiredMixin
 from asgiref.sync import sync_to_async
 from ..models import Game
 from websocket.utils import group_name_creater
+from websocket.parsers import sendParser
+import json
+from websocket.actions import GAME_ACCEPTED
 
 class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -12,7 +15,8 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
             self.group_name = group_name_creater("game", game_id)
             game = await sync_to_async(Game.objects.get)(pk=game_id)
             players = await sync_to_async(game.players.all)()
-                     
+            matrix = json.loads(game.matrix)
+            
             if user.id not in [player.id async for player in players]:
                 await self.close(code=4150)
             
@@ -22,6 +26,7 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
             )
             
             await self.accept()
+            await self.send(sendParser(GAME_ACCEPTED, {"matrix" : matrix}))
         except Game.DoesNotExist:
             print("game is not created")
             await self.close(code=4100)

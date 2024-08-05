@@ -5,7 +5,9 @@ from ..utils import userIsAuthenticated
 from asgiref.sync import sync_to_async
 from websocket.actions import GAME_FOUND
 from websocket.utils import action_creater, type_creater, group_name_creater
-
+from ..chess.utils import get_initial_matrix
+from ..wbserializers import MatrixSerializer
+import json
 
 class LobbyConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -34,7 +36,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
                     self.group_name,
                     self.channel_name
                 )
-                game = await sync_to_async(Game.objects.create)()
+                game = await sync_to_async(Game.objects.create)(matrix=json.dumps(get_initial_matrix(), cls=MatrixSerializer))
                 await sync_to_async(game.players.add)(user, player)
                 await sync_to_async(game.save)()
                 await self.channel_layer.group_send(
