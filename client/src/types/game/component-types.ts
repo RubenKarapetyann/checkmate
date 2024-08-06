@@ -1,14 +1,14 @@
 import { DARK_CELL, LIGHT_CELL } from "../../constants/colors"
-import { Matrix, Row } from "./game" 
+import { Matrix, MatrixCell, Row } from "./game" 
 
-type CellHandle = (row: number, column: number) => void
+export type CellHandle = (row: number, column: number) => void
 
 export type CellProps = {
     color : typeof LIGHT_CELL | typeof DARK_CELL,
     row : number,
     column : number,
     handle : CellHandle,
-    figure : string
+    figure : MatrixCell
 }
 
 export type RowProps = {
