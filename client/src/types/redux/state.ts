@@ -5,3 +5,6 @@ export interface AuthenticationState {
     isLoading : boolean
 }
   
+export interface GameState {
+    
+}
