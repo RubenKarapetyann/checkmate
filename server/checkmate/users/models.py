@@ -1,4 +1,11 @@
-from django.db.models import IntegerField, FloatField, ManyToManyField, ImageField
+from django.db.models import (
+    IntegerField, 
+    FloatField, 
+    ManyToManyField, 
+    ImageField, 
+    ForeignKey, 
+    SET_NULL
+)
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
 
@@ -16,3 +23,4 @@ class User(AbstractUser):
     rating = IntegerField(verbose_name="Rating", blank=True, default=0, validators=[
         MinValueValidator(0)
     ])
+    game = ForeignKey("game.Game", related_name="players", verbose_name="Game", on_delete=SET_NULL, null=True, blank=True)
