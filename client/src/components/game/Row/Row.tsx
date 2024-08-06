@@ -13,7 +13,7 @@ const Row = ({ row, list, handle }: RowProps)=>{
                     column={column}
                     color={(row + column)%2 === 0 ? LIGHT_CELL : DARK_CELL}
                     handle={handle}
-                    figure={""}
+                    figure={cell}
                 />
             })}
         </div>
