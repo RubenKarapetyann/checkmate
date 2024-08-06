@@ -1,3 +1,5 @@
+import { Matrix } from "../game/game"
+
 export interface AuthenticationState {
     user : Object | null,
     IsAuthenticated : boolean,
@@ -6,5 +8,5 @@ export interface AuthenticationState {
 }
   
 export interface GameState {
-    
+    matrix: Matrix | null
 }

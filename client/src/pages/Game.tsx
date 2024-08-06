@@ -2,20 +2,21 @@ import { useLocation } from "react-router-dom"
 import useSocket from "../hooks/socket/useSocket";
 import Board from "../components/game/Board/Board";
 import { useEffect, useState } from "react";
-import { Matrix } from "../types/game/game";
 import { GAME_ACCEPTED } from "../constants/actions";
 import { GameAcceptedData } from "../types/api/socket";
 import { CellHandle } from "../types/game/component-types";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { selectMatrix, setMatrix } from "../features/game/gameSlice";
 
 export default function Game(){
     const location = useLocation()
-    const [matrix, setMatrix] = useState<Matrix | null>(null)
-
+    const matrix = useAppSelector(selectMatrix)
     const { socket, listen } = useSocket("game", location.state.game_id)
+    const dispatch = useAppDispatch()
 
     useEffect(()=>{
         listen<GameAcceptedData>(GAME_ACCEPTED, (data)=>[
-            setMatrix(data.matrix)
+            dispatch(setMatrix(data.matrix))
         ])
     }, [socket])
 
