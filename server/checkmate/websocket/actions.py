@@ -1,2 +1,2 @@
-GAME_FOUND = "game-found"
-GAME_ACCEPTED = "game-accepted"
+GAME_FOUND = "game_found"
+GAME_ACCEPTED = "game_accepted"

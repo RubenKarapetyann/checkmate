@@ -21,11 +21,10 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             return await self.close(code=4500)
              
         await self.accept()
-        await self.send(f"user {user.id} connected")
         
         try:
             if await sync_to_async(lambda : user.lobby)():
-                return await self.send(f"user is in lobby #{user.lobby.id}")
+                return
         except Lobby.DoesNotExist:
             lobbies = await sync_to_async(Lobby.objects.all)()
             if await sync_to_async(lobbies.exists)():
