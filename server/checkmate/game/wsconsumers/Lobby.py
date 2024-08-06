@@ -8,6 +8,7 @@ from websocket.utils import action_creater, type_creater, group_name_creater
 from ..chess.utils import get_initial_matrix
 from ..wbserializers import MatrixSerializer
 import json
+from random import randint
 
 class LobbyConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -17,7 +18,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             # login requared is temporary
             return await self.close(code=4000)
         
-        if await sync_to_async(user.game.exists)():
+        if await sync_to_async(lambda : user.game)():
             return await self.close(code=4500)
              
         await self.accept()
@@ -35,7 +36,8 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
                     self.group_name,
                     self.channel_name
                 )
-                game = await sync_to_async(Game.objects.create)(matrix=json.dumps(get_initial_matrix(), cls=MatrixSerializer))
+                players = [user, player] if randint(0, 1) == 1 else [player, user]
+                game = await sync_to_async(Game.objects.create)(matrix=json.dumps(get_initial_matrix(), cls=MatrixSerializer), white_id=players[0].id, black_id=players[1].id)
                 await sync_to_async(game.players.add)(user, player)
                 await sync_to_async(game.save)()
                 await self.channel_layer.group_send(
