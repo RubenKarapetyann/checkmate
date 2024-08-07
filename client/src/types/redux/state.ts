@@ -1,3 +1,4 @@
+import { BLACK, WHITE } from "../../constants/game"
 import { Matrix } from "../game/game"
 
 export interface AuthenticationState {
@@ -8,5 +9,6 @@ export interface AuthenticationState {
 }
   
 export interface GameState {
-    matrix: Matrix | null
+    matrix: Matrix | null,
+    selfColor: typeof BLACK | typeof WHITE | null
 }

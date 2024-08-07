@@ -1,4 +1,5 @@
 import { GAME_ACCEPTED, GAME_FOUND } from "../../constants/actions"
+import { BLACK, WHITE } from "../../constants/game"
 import { Matrix } from "../game/game"
 
 export type SocketData = {
@@ -13,7 +14,8 @@ export type GameFoundData = {
 }
 
 export type GameAcceptedData = {
-    matrix : Matrix
+    matrix : Matrix,
+    color : typeof BLACK | typeof WHITE
 }
 
 export type Data = GameFoundData

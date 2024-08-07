@@ -6,18 +6,20 @@ import { GAME_ACCEPTED } from "../constants/actions";
 import { GameAcceptedData } from "../types/api/socket";
 import { CellHandle } from "../types/game/component-types";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { selectMatrix, setMatrix } from "../features/game/gameSlice";
+import { selectColor, selectMatrix, setInitialGameState } from "../features/game/gameSlice";
+import { WHITE } from "../constants/game";
 
 export default function Game(){
     const location = useLocation()
     const matrix = useAppSelector(selectMatrix)
+    const selfColor = useAppSelector(selectColor)
     const { socket, listen } = useSocket("game", location.state.game_id)
     const dispatch = useAppDispatch()
 
     useEffect(()=>{
-        listen<GameAcceptedData>(GAME_ACCEPTED, (data)=>[
-            dispatch(setMatrix(data.matrix))
-        ])
+        listen<GameAcceptedData>(GAME_ACCEPTED, (data)=>{
+            dispatch(setInitialGameState(data))
+        })
     }, [socket])
 
     if(!matrix){
@@ -28,5 +30,5 @@ export default function Game(){
         console.log(row, column)
     }
 
-    return <Board matrix={matrix} handle={handle}/>
+    return <Board matrix={matrix} handle={handle} reverse={selfColor === WHITE}/>
 }
