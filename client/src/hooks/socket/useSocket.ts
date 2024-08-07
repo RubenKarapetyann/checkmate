@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import socketEndpoints from "../../api/endpoints/socketEndpoints"
-import { Action } from "../../types/api/socket"
 import { receiveParser } from "../../api/socket/parsers"
 import { Listener, Listeners } from "../../types/hooks/socket"
+import { Action } from "../../types/socket/global"
 
 const useSocket = (endpoint: keyof ReturnType<typeof socketEndpoints>, id?: number)=>{
     const [socket, setSocket] = useState<null | WebSocket>(null)

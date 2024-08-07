@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GameState } from '../../types/redux/state';
 import { RootState } from '../../app/store';
 import { Matrix } from '../../types/game/game';
-import { GameAcceptedData } from '../../types/api/socket';
+import { GameAcceptedData } from '../../types/socket/receiveData';
 
 const name = "game"
 const initialState: GameState = {

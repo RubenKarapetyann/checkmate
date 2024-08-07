@@ -3,7 +3,7 @@ import { GAME_FOUND } from "../constants/actions"
 import useSocket from "../hooks/socket/useSocket"
 import { GAME_PATH } from "../constants/paths"
 import { useEffect } from "react"
-import { GameFoundData } from "../types/api/socket"
+import { GameFoundData } from "../types/socket/receiveData"
 
 export default function Lobby(){
     const { socket, listen } = useSocket("lobby") 
