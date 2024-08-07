@@ -8,16 +8,19 @@ export type CellProps = {
     row : number,
     column : number,
     handle : CellHandle,
-    figure : MatrixCell
+    figure : MatrixCell,
+    reverse : boolean
 }
 
 export type RowProps = {
     list : Row,
     row : number,
-    handle : CellHandle
+    handle : CellHandle,
+    reverse : boolean
 }
 
 export type BoardProps = {
     matrix : Matrix,
-    handle : CellHandle
+    handle : CellHandle,
+    reverse : boolean
 }

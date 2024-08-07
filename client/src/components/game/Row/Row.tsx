@@ -3,7 +3,7 @@ import { RowProps } from "../../../types/game/component-types"
 import Cell from "../Cell/Cell"
 import styles from "./Row.module.css"
 
-const Row = ({ row, list, handle }: RowProps)=>{
+const Row = ({ row, list, handle, reverse }: RowProps)=>{
     return (
         <div className={styles.row}>
             {list.map((cell, column)=>{
@@ -14,6 +14,7 @@ const Row = ({ row, list, handle }: RowProps)=>{
                     color={(row + column)%2 === 0 ? LIGHT_CELL : DARK_CELL}
                     handle={handle}
                     figure={cell}
+                    reverse={reverse}
                 />
             })}
         </div>
