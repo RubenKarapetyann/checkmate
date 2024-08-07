@@ -1,4 +1,6 @@
-import { Action, Data, SocketData } from "../../types/api/socket"
+import { Action } from "../../types/socket/global"
+import { SocketData } from "../../types/socket/receiveData"
+import { SendData } from "../../types/socket/sendData"
 
 export const receiveParser = (textData: string): SocketData=>{
     const jsonData: SocketData = JSON.parse(textData)
@@ -9,8 +11,8 @@ export const receiveParser = (textData: string): SocketData=>{
 }
 
 
-export const sendParser = (action: Action, data: Data)=>{
-    const jsonData: SocketData = {action, data}
+export const sendParser = <D extends SendData>(action: Action, data: D)=>{
+    const jsonData = {action, data}
     const textData = JSON.stringify(jsonData)
 
     return textData

@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectColor, selectMatrix, setInitialGameState } from "../features/game/gameSlice";
 import { WHITE } from "../constants/game";
 import { GameAcceptedData } from "../types/socket/receiveData";
+import { sendParser } from "../api/socket/parsers";
+import { ChosenFigure } from "../types/socket/sendData";
 
 export default function Game(){
     const location = useLocation()
@@ -27,7 +29,10 @@ export default function Game(){
     }
 
     const handle: CellHandle = (row, column)=>{
-        console.log(row, column)
+        const cell = matrix[row][column] 
+        if (cell === 0 || cell.color !== selfColor){ return } 
+        
+        socket?.send(sendParser<ChosenFigure>(GET_MOVES, { row, column, figure_id : cell.id }))
     }
 
     return <Board matrix={matrix} handle={handle} reverse={selfColor === WHITE}/>
