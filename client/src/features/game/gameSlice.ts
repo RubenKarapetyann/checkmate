@@ -33,5 +33,6 @@ export const { setMatrix, setInitialGameState, setActiveFigure } = gameSlice.act
 
 export const selectMatrix = (state: RootState) => state.game.matrix;
 export const selectColor = (state: RootState) => state.game.selfColor;
+export const selectActiveFigure = (state: RootState) => state.game.activeFigure;
 
 export default gameSlice.reducer;
