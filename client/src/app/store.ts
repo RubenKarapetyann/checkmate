@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authenticationReducer from '../features/authentication/authenticationSlice';
+import gameReducer from "../features/game/gameSlice";
 
 export const store = configureStore({
   reducer: {
-    authentication : authenticationReducer
+    authentication : authenticationReducer,
+    game : gameReducer
   }
 })
 

@@ -1,8 +1,9 @@
 import { RouteObject } from "react-router-dom"
-import { HOME_PATH, LOBBY_PATH, LOGIN_PATH, TEST_PATH } from "../constants/paths"
+import { GAME_PATH, HOME_PATH, LOBBY_PATH, LOGIN_PATH, TEST_PATH } from "../constants/paths"
 import Home from "../pages/Home"
 import Login from "../pages/Login"
 import Lobby from "../pages/Lobby"
+import Game from "../pages/Game"
 
 const TEST: RouteObject = {
     element : <p>test</p>,
@@ -24,5 +25,10 @@ const LOBBY: RouteObject = {
     path : LOBBY_PATH
 }
 
-const ROUTES = [TEST, HOME, LOGIN, LOBBY]
+const GAME: RouteObject = {
+    element : <Game/>,
+    path : GAME_PATH
+}
+
+const ROUTES = [TEST, HOME, LOGIN, LOBBY, GAME]
 export default ROUTES
