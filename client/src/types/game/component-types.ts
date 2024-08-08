@@ -9,18 +9,21 @@ export type CellProps = {
     column : number,
     handle : CellHandle,
     figure : MatrixCell,
-    reverse : boolean
+    reverse : boolean,
+    isActive : boolean
 }
 
 export type RowProps = {
     list : Row,
     row : number,
     handle : CellHandle,
-    reverse : boolean
+    reverse : boolean,
+    activeCells? : Array<number> | null
 }
 
 export type BoardProps = {
     matrix : Matrix,
     handle : CellHandle,
-    reverse : boolean
+    reverse : boolean,
+    activeCells? : Array<Array<number>> | null
 }
