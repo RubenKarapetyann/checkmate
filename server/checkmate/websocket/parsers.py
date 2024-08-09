@@ -1,5 +1,5 @@
 import json
-from game.wbserializers import MatrixSerializer
+from game.wbserializers import ClientMatrixSerializer
 
 def receiveParser(text_data):
     json_data = json.loads(text_data)
@@ -8,7 +8,7 @@ def receiveParser(text_data):
     
     return [action, data]
 
-def sendParser(action, data, cls=MatrixSerializer):
+def sendParser(action, data, cls=ClientMatrixSerializer):
     json_data = { "action" : action, "data" : data }
     text_data = json.dumps(json_data, cls=cls)
     

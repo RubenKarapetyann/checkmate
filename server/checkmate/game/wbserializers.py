@@ -6,13 +6,21 @@ class MatrixSerializer(JSONEncoder):
         dict = figure.__dict__
         return {
             "id" : dict["id"],
-            "image" : dict["image"],
             "color" : dict["color"],
             "number" : dict["number"],
             "row" : dict["row"],
             "column" : dict["column"]
         }
         
+class ClientMatrixSerializer(JSONEncoder):
+    def default(self, figure):
+        dict = figure.__dict__ 
+        return {
+            "image" : dict["image"],
+            "id" : dict["id"],
+            "color" : dict["color"],
+            "number" : dict["number"]
+        }
 
 def from_db_objects_to_classes_serializer(json_object):
     if "number" in json_object:

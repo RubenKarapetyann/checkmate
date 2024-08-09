@@ -19,7 +19,7 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
             self.group_name = group_name_creater("game", game_id)
             game = await sync_to_async(Game.objects.get)(pk=game_id)
             players = await sync_to_async(game.players.all)()
-            matrix = json.loads(game.matrix)
+            matrix = json.JSONDecoder(object_hook=from_db_objects_to_classes_serializer).decode(game.matrix)
             opposite_player = await sync_to_async(players.get)(~Q(id=user.id))
             
             if user.id not in [player.id async for player in players]:
