@@ -1,5 +1,5 @@
 from .base import FigureBase
-from ..constants import BLACK
+from ..constants import BLACK, WHITE
 
 class Pawn(FigureBase):
     number = 1
@@ -15,12 +15,19 @@ class Pawn(FigureBase):
         
         
     def get_moves(self):
-        return [
-            [ self.operation(self.row, 1), self.column + 1 ],
-            [ self.operation(self.row, 1), self.column ],
-            [ self.operation(self.row, 2), self.column ],
-            [ self.operation(self.row, 1), self.column - 1 ],
-        ]
+        row = self.operation(self.row, 1)
+        moves = [[ row, self.column ]]
+        
+        if self.column + 1 < self.m_columns and self.matrix[row][self.column + 1] != 0:
+            moves.append([ row, self.column + 1 ])
+            
+        if self.column - 1 >= 0 and self.matrix[row][self.column - 1] != 0:
+            moves.append([ row, self.column - 1 ])
+            
+        if (self.color == BLACK and self.row == 6) or (self.color == WHITE and self.row == 1):
+            moves.append([ self.operation(self.row, 2), self.column ])
+            
+        return moves
         
     def operation(self, a, b):
         if self.color == BLACK:
