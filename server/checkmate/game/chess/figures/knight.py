@@ -10,7 +10,6 @@ class Knight(FigureBase):
         self.name = Knight.name
         self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
         self.icon = ""
-        self.moves = self.get_moves()
         
         
         
@@ -25,4 +24,9 @@ class Knight(FigureBase):
             [ self.row + 2, self.column - 1 ],
             [ self.row + 1, self.column - 2 ],
         ]
+        
+            
+    def get_verified_moves(self):
+        self.moves = self.get_moves()
+        self.moves = self.confirm_moves()
         

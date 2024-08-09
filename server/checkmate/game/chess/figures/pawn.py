@@ -11,7 +11,6 @@ class Pawn(FigureBase):
         self.name = Pawn.name
         self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
         self.icon = ""
-        self.moves = self.get_moves()
         
         
         
@@ -27,3 +26,9 @@ class Pawn(FigureBase):
         if self.color == BLACK:
             return a - b
         return a + b
+    
+                
+    def get_verified_moves(self):
+        self.moves = self.get_moves()
+        self.moves = self.confirm_moves()
+        

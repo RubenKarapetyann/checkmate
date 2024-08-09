@@ -10,5 +10,7 @@ class Bishop(FigureBase):
         self.name = Bishop.name
         self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
         self.icon = ""
+        
+    def get_verified_moves(self):
         self.moves = self.get_diagonal_moves()
         
