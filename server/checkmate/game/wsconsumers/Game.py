@@ -5,9 +5,11 @@ from ..models import Game
 from websocket.utils import group_name_creater
 from websocket.parsers import sendParser
 import json
-from websocket.actions import GAME_ACCEPTED
+from websocket.actions import GAME_ACCEPTED, GET_MOVES
 from ..chess.constants import WHITE, BLACK
 from django.db.models import Q
+from ..wbserializers import from_db_objects_to_classes_serializer
+from ..chess.figures.base import FigureBase
 
 class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -47,7 +49,28 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
         )
 
     
-    async def receive_json(self, content, **kwargs):
-        pass
+    async def receive_json(self, content):
+        action = content["action"]
+        data = content["data"]
+                
+        user = self.scope["user"]
+        
+        game = await sync_to_async(lambda: user.game)()
+        
+        matrix = json.JSONDecoder(object_hook=from_db_objects_to_classes_serializer).decode(game.matrix)
+        
+        match action:
+            case GET_MOVES:
+                figure: FigureBase = matrix[data["row"]][data["column"]]
+                figure.matrix = matrix
+                figure.get_verified_moves()
+                
+                await self.send(sendParser(GET_MOVES, {
+                    "row": data["row"],
+                    "column": data["column"],
+                    "number": figure.number,
+                    "id": data["figure_id"],
+                    "moves": figure.moves
+                }))
         
         
