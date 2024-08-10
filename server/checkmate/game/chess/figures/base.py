@@ -17,8 +17,16 @@ class FigureBase:
         self.id = f"{uuid.uuid4()}"
         self.moves = []
         
-    def move(self):
-        pass
+    def move(self, to_row, to_column):
+        # you may check if that move exists
+        self.matrix[self.row][self.column] = 0
+        
+        self.row = to_row
+        self.column = to_column
+        self.matrix[to_row][to_column] = self
+        
+        return self.matrix
+        
     
     def get_verified_moves(self):
         pass
