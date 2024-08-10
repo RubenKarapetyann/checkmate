@@ -3,12 +3,13 @@ from ..models import Lobby, Game
 from users.models import User
 from ..utils import userIsAuthenticated
 from asgiref.sync import sync_to_async
-from websocket.actions import GAME_FOUND
+from websocket.actions import Actions
 from websocket.utils import action_creater, type_creater, group_name_creater
 from ..chess.utils import get_initial_matrix
 from ..wbserializers import MatrixSerializer
 import json
 from random import randint
+from websocket.parsers import sendParser
 
 class LobbyConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -18,8 +19,10 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
             # login requared is temporary
             return await self.close(code=4000)
         
-        if await sync_to_async(lambda : user.game)():
-            return await self.close(code=4500)
+        game = await sync_to_async(lambda : user.game)()
+        if game:
+            await self.accept()
+            return await self.send(sendParser(Actions.GAME_FOUND, { "game_id" : game.id }))
              
         await self.accept()
         
@@ -58,7 +61,7 @@ class LobbyConsumer(AsyncJsonWebsocketConsumer):
     async def game_found(self, content, **kwargs):
         data = content["data"]
         
-        return await self.send_json(action_creater(GAME_FOUND, {
+        return await self.send_json(action_creater(Actions.GAME_FOUND, {
             "game_id" : data["game_id"]
         }))
         
