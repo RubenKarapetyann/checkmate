@@ -12,8 +12,8 @@ class FigureBase:
         self.color = color
         self.icon = ""
         self.name = None
-        self.m_rows = len(self.matrix)
-        self.m_columns = len(self.matrix[0])
+        self.m_rows = 8 #len(self.matrix)
+        self.m_columns = 8 #len(self.matrix[0])
         self.id = f"{uuid.uuid4()}"
         self.moves = []
         
@@ -32,9 +32,10 @@ class FigureBase:
     def get_line_moves(self, diapason: int, define_cell):
         moves = []
         for i in range(1, diapason):
-            cell = define_cell(self.row, self.column, i, self.matrix)
+            row, column = define_cell(self.row, self.column, i)
+            cell = self.matrix[row][column]
             if(cell == 0):
-                moves.append([cell.row, cell.column])
+                moves.append([row, column])
                 continue
             elif(cell.color == self.color):
                 break
@@ -46,27 +47,27 @@ class FigureBase:
             
     def get_horizontal_moves(self):    
         return (
-            self.get_line_moves(self.m_columns - self.column, lambda row, column, i, matrix: matrix[row][column + i])
+            self.get_line_moves(self.m_columns - self.column, lambda row, column, i: [row, column + i])
             +
-            self.get_line_moves(self.column + 1, lambda row, column, i, matrix: matrix[row][column - i])
+            self.get_line_moves(self.column + 1, lambda row, column, i: [row, column - i])
         )
 
     def get_vertical_moves(self):
         return (
-            self.get_line_moves(self.m_rows - self.row, lambda row, column, i, matrix: matrix[row + i][column])
+            self.get_line_moves(self.m_rows - self.row, lambda row, column, i: [row + i, column])
             +
-            self.get_line_moves(self.row + 1, lambda row, column, i, matrix: matrix[row - i][column])
+            self.get_line_moves(self.row + 1, lambda row, column, i: [row - i, column])
         )
 
     def get_diagonal_moves(self): 
         return (
-            self.get_line_moves(min(self.m_rows - self.row, self.m_columns - self.column), lambda row, column, i, matrix: matrix[row + i][column + i])
+            self.get_line_moves(min(self.m_rows - self.row, self.m_columns - self.column), lambda row, column, i: [row + i, column + i])
             +
-            self.get_line_moves(min(self.row + 1, self.m_columns - self.column), lambda row, column, i, matrix: matrix[row - i][column + i])
+            self.get_line_moves(min(self.row + 1, self.m_columns - self.column), lambda row, column, i: [row - i, column + i])
             +
-            self.get_line_moves(min(self.row, self.column) + 1, lambda row, column, i, matrix: matrix[row - i][column - i])
+            self.get_line_moves(min(self.row, self.column) + 1, lambda row, column, i: [row - i, column - i])
             +
-            self.get_line_moves(min(self.m_rows - self.row, self.column + 1), lambda row, column, i, matrix: matrix[row + i][column - i])
+            self.get_line_moves(min(self.m_rows - self.row, self.column + 1), lambda row, column, i: [row + i, column - i])
         )
         
     def confirm_moves(self):
@@ -87,3 +88,7 @@ class FigureBase:
             
         return verified_moves
         
+    def __str__(self):
+        return f"{self.color} {self.name}"
+    
+    __repr__ = __str__

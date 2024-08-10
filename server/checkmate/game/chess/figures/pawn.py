@@ -16,7 +16,7 @@ class Pawn(FigureBase):
         
     def get_moves(self):
         row = self.operation(self.row, 1)
-        moves = [[ row, self.column ]]
+        moves = []
         
         if self.column + 1 < self.m_columns and self.matrix[row][self.column + 1] != 0:
             moves.append([ row, self.column + 1 ])
@@ -27,6 +27,10 @@ class Pawn(FigureBase):
         if (self.color == BLACK and self.row == 6) or (self.color == WHITE and self.row == 1):
             moves.append([ self.operation(self.row, 2), self.column ])
             
+        if(self.matrix[row][self.column] == 0):
+            moves.append([ row, self.column ])
+        
+        
         return moves
         
     def operation(self, a, b):
