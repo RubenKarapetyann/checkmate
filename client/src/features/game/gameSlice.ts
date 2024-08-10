@@ -24,12 +24,15 @@ export const gameSlice = createSlice({
     },
     setActiveFigure : (state, action: PayloadAction<ActiveFigure>)=>{
       state.activeFigure = action.payload
+    },
+    deactivateFigure : (state)=>{
+      state.activeFigure = null
     }
   },
   extraReducers: (builder) => {}
 })
 
-export const { setMatrix, setInitialGameState, setActiveFigure } = gameSlice.actions;
+export const { setMatrix, setInitialGameState, setActiveFigure, deactivateFigure } = gameSlice.actions;
 
 export const selectMatrix = (state: RootState) => state.game.matrix;
 export const selectColor = (state: RootState) => state.game.selfColor;
