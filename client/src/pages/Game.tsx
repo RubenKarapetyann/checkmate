@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import { FIGURE_MOVE, GAME_ACCEPTED, GET_MOVES } from "../constants/actions";
 import { CellHandle } from "../types/game/component-types";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { deactivateFigure, selectActiveFigure, selectColor, selectMatrix, setActiveFigure, setInitialGameState } from "../features/game/gameSlice";
+import { deactivateFigure, selectActiveFigure, selectColor, selectMatrix, setActiveFigure, setInitialGameState, setMatrix } from "../features/game/gameSlice";
 import { WHITE } from "../constants/game";
-import { GameAcceptedData, GetActiveFigureMoves } from "../types/socket/receiveData";
+import { GameAcceptedData, GetActiveFigureMoves, MatrixUpdateData } from "../types/socket/receiveData";
 import { sendParser } from "../api/socket/parsers";
 import { ChosenFigure, FigureMove } from "../types/socket/sendData";
 
@@ -25,6 +25,9 @@ export default function Game(){
         })
         listen<GetActiveFigureMoves>(GET_MOVES, (data)=>{
             dispatch(setActiveFigure(data))
+        })
+        listen<MatrixUpdateData>(FIGURE_MOVE, (data)=>{
+            dispatch(setMatrix(data.matrix))
         })
     }, [socket])
 

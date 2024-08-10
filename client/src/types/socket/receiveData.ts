@@ -12,9 +12,13 @@ export type GameAcceptedData = {
     color : typeof BLACK | typeof WHITE
 }
 
+export type MatrixUpdateData = {
+    matrix : Matrix
+}
+
 export type GetActiveFigureMoves = ActiveFigure
 
-export type Data = GameFoundData | GameAcceptedData | GetActiveFigureMoves
+export type Data = GameFoundData | GameAcceptedData | GetActiveFigureMoves | MatrixUpdateData
 
 export interface SocketData extends SocketDataBase {
     data : Data
