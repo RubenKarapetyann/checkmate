@@ -1,15 +1,15 @@
 import { useLocation } from "react-router-dom"
 import useSocket from "../hooks/socket/useSocket";
 import Board from "../components/game/Board/Board";
-import { useEffect, useState } from "react";
-import { GAME_ACCEPTED, GET_MOVES } from "../constants/actions";
+import { useEffect } from "react";
+import { FIGURE_MOVE, GAME_ACCEPTED, GET_MOVES } from "../constants/actions";
 import { CellHandle } from "../types/game/component-types";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { selectActiveFigure, selectColor, selectMatrix, setActiveFigure, setInitialGameState } from "../features/game/gameSlice";
+import { deactivateFigure, selectActiveFigure, selectColor, selectMatrix, setActiveFigure, setInitialGameState } from "../features/game/gameSlice";
 import { WHITE } from "../constants/game";
 import { GameAcceptedData, GetActiveFigureMoves } from "../types/socket/receiveData";
 import { sendParser } from "../api/socket/parsers";
-import { ChosenFigure } from "../types/socket/sendData";
+import { ChosenFigure, FigureMove } from "../types/socket/sendData";
 
 export default function Game(){
     const location = useLocation()
@@ -34,9 +34,33 @@ export default function Game(){
 
     const handle: CellHandle = (row, column)=>{
         const cell = matrix[row][column] 
-        if (cell === 0 || cell.color !== selfColor){ return } 
+
+        if (
+            (!activeFigure  || (activeFigure.row !== row || activeFigure.column !== column)) && 
+            cell !== 0 && 
+            cell.color === selfColor
+        ){ 
+            socket?.send(sendParser<ChosenFigure>(GET_MOVES, { row, column, figure_id : cell.id }))
+        }
         
-        socket?.send(sendParser<ChosenFigure>(GET_MOVES, { row, column, figure_id : cell.id }))
+        if(activeFigure){
+            const move = activeFigure.moves.find(move=>{
+                return move[0] === row && move[1] === column
+            })
+
+            if(!move){
+                return
+            }
+
+            socket?.send(sendParser<FigureMove>(FIGURE_MOVE, {
+                row : activeFigure.row,
+                column : activeFigure.column,
+                figure_id : activeFigure.id,
+                to_row : row,
+                to_column : column
+            }))
+            dispatch(deactivateFigure())
+        }
     }
 
     return <Board matrix={matrix} handle={handle} reverse={selfColor === WHITE} activeCells={activeFigure && activeFigure.moves}/>
