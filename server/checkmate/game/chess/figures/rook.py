@@ -10,9 +10,10 @@ class Rook(FigureBase):
         self.name = Rook.name
         self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
         self.icon = ""
-        self.moves = self.get_moves()
         
         
     def get_moves(self):
         return self.get_horizontal_moves() + self.get_vertical_moves()
         
+    def get_verified_moves(self):
+        self.moves = self.get_moves()
