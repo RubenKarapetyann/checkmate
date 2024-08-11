@@ -1,5 +1,5 @@
-import { MATRIX_SIZE } from "../constants/game"
-import { Matrix } from "../types/game/game"
+import { BLACK, MATRIX_SIZE, WHITE } from "../constants/game"
+import { Color, Matrix } from "../types/game/game"
 
 export const createMatrix = ()=>{
     const matrix: Matrix = []
@@ -11,4 +11,12 @@ export const createMatrix = ()=>{
     }
     
     return matrix
+}
+
+export const getMyMove = (movesCount: number | null, selfColor: Color | null)=>{
+    if(!movesCount || !selfColor) {
+        return false
+    }
+    return (movesCount % 2 === 0 && selfColor === WHITE) || 
+    (movesCount % 2 === 1 && selfColor === BLACK) ? true : false
 }

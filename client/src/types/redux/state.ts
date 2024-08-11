@@ -1,5 +1,4 @@
-import { BLACK, WHITE } from "../../constants/game"
-import { Matrix } from "../game/game"
+import { Color, Matrix } from "../game/game"
 
 export interface AuthenticationState {
     user : Object | null,
@@ -10,8 +9,10 @@ export interface AuthenticationState {
   
 export interface GameState {
     matrix: Matrix | null,
-    selfColor: typeof BLACK | typeof WHITE | null,
-    activeFigure: ActiveFigure | null
+    selfColor: Color | null,
+    activeFigure: ActiveFigure | null,
+    movesCount: null | number,
+    myMove: boolean
 }
 
 export type ActiveFigure = {
