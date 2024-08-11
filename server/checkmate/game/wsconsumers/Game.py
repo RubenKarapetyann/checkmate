@@ -88,6 +88,7 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
                 game.matrix = json.dumps(new_matrix, cls=MatrixSerializer)
                 game.moves_count = F("moves_count") + 1
                 await sync_to_async(game.save)()
+                await sync_to_async(game.refresh_from_db)()
                 await self.channel_layer.group_send(
                     self.group_name, 
                     type_creater("figure_move", {

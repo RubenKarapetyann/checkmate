@@ -100,3 +100,22 @@ class FigureBase:
         return f"{self.color} {self.name}"
     
     __repr__ = __str__
+    
+    
+    def get_db_dict(self):
+        return {
+            "id" : self.id,
+            "color" : self.color,
+            "number" : self.number,
+            "row" : self.row,
+            "column" : self.column
+        }
+        
+        
+    def get_client_dict(self):
+        return {
+            "image" : self.image,
+            "id" : self.id,
+            "color" : self.color,
+            "number" : self.number
+        }
