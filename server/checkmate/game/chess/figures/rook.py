@@ -1,6 +1,6 @@
-from .base import FigureBase
+from .parents import FigureWithMovesCount
 
-class Rook(FigureBase):
+class Rook(FigureWithMovesCount):
     number = 4
     name = "rook"
     
@@ -8,7 +8,7 @@ class Rook(FigureBase):
         super().__init__(row, column, matrix, color)
         self.number = Rook.number
         self.name = Rook.name
-        self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
+        self.image = f"{super().figures_img_path}/{color}/{self.name}.png"
         self.icon = ""
         
         

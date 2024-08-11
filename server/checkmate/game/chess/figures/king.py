@@ -1,6 +1,6 @@
-from .base import FigureBase
+from .parents import FigureWithMovesCount
 
-class King(FigureBase):
+class King(FigureWithMovesCount):
     number = 5
     name = "king"
     
@@ -8,7 +8,7 @@ class King(FigureBase):
         super().__init__(row, column, matrix, color)
         self.number = King.number
         self.name = King.name
-        self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
+        self.image = f"{super().figures_img_path}/{color}/{self.name}.png"
         self.icon = ""
         
         

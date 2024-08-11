@@ -1,7 +1,7 @@
-from .base import FigureBase
+from .parents import FigureWithMovesCount
 from ..constants import BLACK, WHITE
 
-class Pawn(FigureBase):
+class Pawn(FigureWithMovesCount):
     number = 1
     name = "pawn"
     
@@ -9,7 +9,7 @@ class Pawn(FigureBase):
         super().__init__(row, column, matrix, color)
         self.number = Pawn.number
         self.name = Pawn.name
-        self.image = f"{FigureBase.figures_img_path}/{color}/{self.name}.png"
+        self.image = f"{super().figures_img_path}/{color}/{self.name}.png"
         self.icon = ""
         
         
