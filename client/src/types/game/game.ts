@@ -8,6 +8,8 @@ export type MatrixCell = 0 | Figure
 export type Figure = {
     image : string,
     id : string,
-    color : typeof BLACK | typeof WHITE,
+    color : Color,
     number : number
 }
+
+export type Color = typeof BLACK | typeof WHITE

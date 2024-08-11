@@ -8,7 +8,9 @@ const name = "game"
 const initialState: GameState = {
     matrix: null,
     selfColor: null,
-    activeFigure: null
+    activeFigure: null,
+    movesCount: null,
+    myMove: false
 }
 
 export const gameSlice = createSlice({
@@ -37,5 +39,6 @@ export const { setMatrix, setInitialGameState, setActiveFigure, deactivateFigure
 export const selectMatrix = (state: RootState) => state.game.matrix;
 export const selectColor = (state: RootState) => state.game.selfColor;
 export const selectActiveFigure = (state: RootState) => state.game.activeFigure;
+export const selectMyMove = (state: RootState) => state.game.myMove
 
 export default gameSlice.reducer;
