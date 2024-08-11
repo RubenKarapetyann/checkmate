@@ -7,7 +7,7 @@ from websocket.parsers import sendParser
 import json
 from websocket.actions import Actions
 from ..chess.constants import WHITE, BLACK
-from django.db.models import Q
+from django.db.models import Q, F
 from ..wbserializers import from_db_objects_to_classes_serializer
 from ..chess.figures.base import FigureBase
 from ..wbserializers import MatrixSerializer
@@ -39,7 +39,7 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
             if game.black_id == user.id:
                 color = BLACK
                 
-            await self.send(sendParser(Actions.GAME_ACCEPTED, {"matrix" : matrix, "color" : color}))
+            await self.send(sendParser(Actions.GAME_ACCEPTED, {"matrix" : matrix, "color" : color, "moves_count" : game.moves_count}))
         except Game.DoesNotExist:
             print("game is not created")
             await self.close(code=4100)
@@ -86,11 +86,13 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
                 new_matrix = figure.move(data["to_row"], data["to_column"])
                                 
                 game.matrix = json.dumps(new_matrix, cls=MatrixSerializer)
+                game.moves_count = F("moves_count") + 1
                 await sync_to_async(game.save)()
                 await self.channel_layer.group_send(
                     self.group_name, 
                     type_creater("figure_move", {
-                        "matrix" : new_matrix
+                        "matrix" : new_matrix,
+                        "moves_count" : game.moves_count
                     })
                 )
     
@@ -98,7 +100,8 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
         data = content["data"]
         
         return await self.send(sendParser(Actions.FIGURE_MOVE, {
-            "matrix" : data["matrix"]
+            "matrix" : data["matrix"],
+            "moves_count" : data["moves_count"]
         }))
         
         
