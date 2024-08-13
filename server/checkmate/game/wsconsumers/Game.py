@@ -13,6 +13,7 @@ from ..chess.figures.base import FigureBase
 from ..wbserializers import MatrixSerializer
 from users.models import User
 from websocket.utils import type_creater
+from ..chess.game import Chess
 
 class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -65,26 +66,23 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
         
         matrix = json.JSONDecoder(object_hook=from_db_objects_to_classes_serializer).decode(game.matrix)
         
+        chess = Chess(game.moves_count, game.mode, matrix, game.white_id, game.black_id)
         
         match action:
             case Actions.GET_MOVES:
-                figure: FigureBase = matrix[data["row"]][data["column"]]
-                figure.matrix = matrix
-                figure.get_verified_moves()
+                row, column = ( data["row"], data["column"] )
+                moves, number, id = chess.get_moves(row, column)
                 
                 await self.send(sendParser(Actions.GET_MOVES, {
-                    "row": data["row"],
-                    "column": data["column"],
-                    "number": figure.number,
-                    "id": data["figure_id"],
-                    "moves": figure.moves
+                    "row": row,
+                    "column": column,
+                    "number": number,
+                    "id": id,
+                    "moves": moves
                 }))
             case Actions.FIGURE_MOVE:
-                figure: FigureBase = matrix[data["row"]][data["column"]]
-                                    
-                figure.matrix = matrix
-                new_matrix = figure.move(data["to_row"], data["to_column"])
-                                
+                new_matrix = chess.move(data["row"], data["column"], data["to_row"], data["to_column"])
+        
                 game.matrix = json.dumps(new_matrix, cls=MatrixSerializer)
                 game.moves_count = F("moves_count") + 1
                 await sync_to_async(game.save)()
