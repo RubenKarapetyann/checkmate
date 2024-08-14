@@ -26,6 +26,17 @@ class FigureBase:
         self.matrix[to_row][to_column] = self
         
         return self.matrix
+    
+    
+    def has_checked(self):
+        self.get_verified_moves()
+        
+        for move in self.moves:
+            cell = self.matrix[move[0]][move[1]]
+            if cell and cell.number == 5 and cell.color != self.color: # King.number
+                return True
+            
+        return False
         
     
     def get_verified_moves(self):
