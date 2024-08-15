@@ -30,3 +30,7 @@ class Knight(FigureBase):
         self.moves = self.get_moves()
         self.moves = self.confirm_moves()
         
+    def get_cells_under_control(self):
+        self.moves = self.get_moves()
+        return self.confirm_moves(defending=True)
+        

@@ -12,5 +12,11 @@ class Bishop(FigureBase):
         self.icon = ""
         
     def get_verified_moves(self):
-        self.moves = self.get_diagonal_moves()
+        self.moves = self.get_moves()
+        
+    def get_cells_under_control(self):
+        return self.get_moves(defending=True)
+    
+    def get_moves(self, defending=False):
+        return self.get_diagonal_moves(defending)
         
