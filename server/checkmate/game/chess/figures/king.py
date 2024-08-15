@@ -27,4 +27,23 @@ class King(FigureWithMovesCount):
         
     def get_verified_moves(self):
         self.moves = self.get_moves()
-        self.moves = self.confirm_moves()
+        attackable_cells = self.get_attackable_cells()
+        self.moves = self.confirm_moves(attackable_cells)
+    
+    def get_cells_under_control(self):
+        self.moves = self.get_moves()
+        return self.confirm_moves(defending=True)
+        
+    def get_attackable_cells(self):
+        cells = []
+        
+        for row in self.matrix:
+            for cell in row:
+                if cell == 0 or cell.color == self.color:
+                    continue
+                
+                cell.matrix = self.matrix
+                cells += cell.get_cells_under_control()
+                
+                
+        return cells
