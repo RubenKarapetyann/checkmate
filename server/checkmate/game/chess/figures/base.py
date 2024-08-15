@@ -48,7 +48,7 @@ class FigureBase:
     def get_moves(self):
         pass
     
-    def get_line_moves(self, diapason: int, define_cell):
+    def get_line_moves(self, diapason: int, define_cell, defending: bool):
         moves = []
         for i in range(1, diapason):
             row, column = define_cell(self.row, self.column, i)
@@ -57,6 +57,8 @@ class FigureBase:
                 moves.append([row, column])
                 continue
             elif(cell.color == self.color):
+                if defending:
+                    moves.append([ row, column ])
                 break
             else:
                 moves.append([cell.row, cell.column])
@@ -64,32 +66,32 @@ class FigureBase:
         
         return moves
             
-    def get_horizontal_moves(self):    
+    def get_horizontal_moves(self, defending):    
         return (
-            self.get_line_moves(self.m_columns - self.column, lambda row, column, i: [row, column + i])
+            self.get_line_moves(self.m_columns - self.column, lambda row, column, i: [row, column + i], defending)
             +
-            self.get_line_moves(self.column + 1, lambda row, column, i: [row, column - i])
+            self.get_line_moves(self.column + 1, lambda row, column, i: [row, column - i], defending)
         )
 
-    def get_vertical_moves(self):
+    def get_vertical_moves(self, defending):
         return (
-            self.get_line_moves(self.m_rows - self.row, lambda row, column, i: [row + i, column])
+            self.get_line_moves(self.m_rows - self.row, lambda row, column, i: [row + i, column], defending)
             +
-            self.get_line_moves(self.row + 1, lambda row, column, i: [row - i, column])
+            self.get_line_moves(self.row + 1, lambda row, column, i: [row - i, column], defending)
         )
 
-    def get_diagonal_moves(self): 
+    def get_diagonal_moves(self, defending): 
         return (
-            self.get_line_moves(min(self.m_rows - self.row, self.m_columns - self.column), lambda row, column, i: [row + i, column + i])
+            self.get_line_moves(min(self.m_rows - self.row, self.m_columns - self.column), lambda row, column, i: [row + i, column + i], defending)
             +
-            self.get_line_moves(min(self.row + 1, self.m_columns - self.column), lambda row, column, i: [row - i, column + i])
+            self.get_line_moves(min(self.row + 1, self.m_columns - self.column), lambda row, column, i: [row - i, column + i], defending)
             +
-            self.get_line_moves(min(self.row, self.column) + 1, lambda row, column, i: [row - i, column - i])
+            self.get_line_moves(min(self.row, self.column) + 1, lambda row, column, i: [row - i, column - i], defending)
             +
-            self.get_line_moves(min(self.m_rows - self.row, self.column + 1), lambda row, column, i: [row + i, column - i])
+            self.get_line_moves(min(self.m_rows - self.row, self.column + 1), lambda row, column, i: [row + i, column - i], defending)
         )
         
-    def confirm_moves(self):
+    def confirm_moves(self, attackable_cells=[], defending=False):
         moves = self.moves
         matrix = self.matrix
         matrix_len = len(self.matrix) - 1
@@ -100,7 +102,11 @@ class FigureBase:
                 continue
             
             cell = matrix[move[0]][move[1]]
-            if cell != 0 and cell.color == self.color:
+            if not defending and cell != 0 and cell.color == self.color:
+                continue
+            
+            # not the best solution
+            if len([cell for cell in attackable_cells if cell[0] == move[0] and cell[1] == move[1]]) > 0:
                 continue
             
             verified_moves.append(move)
