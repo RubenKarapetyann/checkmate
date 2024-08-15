@@ -18,13 +18,13 @@ class Pawn(FigureWithMovesCount):
         row = self.operation(self.row, 1)
         moves = []
         
-        if self.column + 1 < self.m_columns and self.matrix[row][self.column + 1] != 0:
+        if self.column + 1 < self.m_columns and self.matrix[row][self.column + 1] != 0 and self.matrix[row][self.column + 1].color != self.color:
             moves.append([ row, self.column + 1 ])
             
-        if self.column - 1 >= 0 and self.matrix[row][self.column - 1] != 0:
+        if self.column - 1 >= 0 and self.matrix[row][self.column - 1] != 0 and self.matrix[row][self.column - 1].color != self.color:
             moves.append([ row, self.column - 1 ])
             
-        if (self.color == BLACK and self.row == 6) or (self.color == WHITE and self.row == 1):
+        if ((self.color == BLACK and self.row == 6) or (self.color == WHITE and self.row == 1)) and self.matrix[row][self.column] == 0 and self.matrix[self.operation(self.row, 2)][self.column] == 0:
             moves.append([ self.operation(self.row, 2), self.column ])
             
         if(self.matrix[row][self.column] == 0):
@@ -32,6 +32,19 @@ class Pawn(FigureWithMovesCount):
         
         
         return moves
+    
+    def get_attacking_moves(self):
+        row = self.operation(self.row, 1)
+        moves = []
+        
+        if self.column + 1 < self.m_columns:
+            moves.append([ row, self.column + 1 ])
+            
+        if self.column - 1 >= 0:
+            moves.append([ row, self.column - 1 ])
+            
+        return moves
+        
         
     def operation(self, a, b):
         if self.color == BLACK:
@@ -41,5 +54,7 @@ class Pawn(FigureWithMovesCount):
                 
     def get_verified_moves(self):
         self.moves = self.get_moves()
-        self.moves = self.confirm_moves()
+    
+    def get_cells_under_control(self):
+        return self.get_attacking_moves()
         
