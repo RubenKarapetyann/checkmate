@@ -46,8 +46,10 @@ class FigureBase:
     def get_moves(self):
         pass
     
-    def get_line_moves(self, diapason: int, define_cell, defending: bool):
+    def get_line_moves(self, diapason: int, define_cell, defending: bool, check_only: bool, caller):
         moves = []
+        king_in_line = False
+        first_figure_before_king = False
         for i in range(1, diapason):
             row, column = define_cell(self.row, self.column, i)
             cell = self.matrix[row][column]
@@ -59,37 +61,58 @@ class FigureBase:
                     moves.append([ row, column ])
                 break
             else:
+                if check_only and self.matrix[row][column].number == 5:
+                    king_in_line = True
+                    moves.append([cell.row, cell.column])
+                    break
+                elif check_only and caller.row == cell.row and caller.column == cell.column:
+                    first_figure_before_king = True
+                    moves.append([cell.row, cell.column])
+                    continue
+                    
                 moves.append([cell.row, cell.column])
-                break
+                if defending and self.matrix[row][column].number == 5:
+                    continue
+                else:
+                    break
+
+        
+        if check_only and first_figure_before_king and king_in_line:
+            return moves
+        
+        if check_only and not king_in_line:
+            return []
         
         return moves
-            
-    def get_horizontal_moves(self, defending):    
+
+    
+             
+    def get_horizontal_moves(self, defending, check_only, caller):    
         return (
-            self.get_line_moves(self.m_columns - self.column, lambda row, column, i: [row, column + i], defending)
+            self.get_line_moves(self.m_columns - self.column, lambda row, column, i: [row, column + i], defending, check_only, caller)
             +
-            self.get_line_moves(self.column + 1, lambda row, column, i: [row, column - i], defending)
+            self.get_line_moves(self.column + 1, lambda row, column, i: [row, column - i], defending, check_only, caller)
         )
 
-    def get_vertical_moves(self, defending):
+    def get_vertical_moves(self, defending, check_only, caller):
         return (
-            self.get_line_moves(self.m_rows - self.row, lambda row, column, i: [row + i, column], defending)
+            self.get_line_moves(self.m_rows - self.row, lambda row, column, i: [row + i, column], defending, check_only, caller)
             +
-            self.get_line_moves(self.row + 1, lambda row, column, i: [row - i, column], defending)
+            self.get_line_moves(self.row + 1, lambda row, column, i: [row - i, column], defending, check_only, caller)
         )
 
-    def get_diagonal_moves(self, defending): 
+    def get_diagonal_moves(self, defending, check_only, caller): 
         return (
-            self.get_line_moves(min(self.m_rows - self.row, self.m_columns - self.column), lambda row, column, i: [row + i, column + i], defending)
+            self.get_line_moves(min(self.m_rows - self.row, self.m_columns - self.column), lambda row, column, i: [row + i, column + i], defending, check_only, caller)
             +
-            self.get_line_moves(min(self.row + 1, self.m_columns - self.column), lambda row, column, i: [row - i, column + i], defending)
+            self.get_line_moves(min(self.row + 1, self.m_columns - self.column), lambda row, column, i: [row - i, column + i], defending, check_only, caller)
             +
-            self.get_line_moves(min(self.row, self.column) + 1, lambda row, column, i: [row - i, column - i], defending)
+            self.get_line_moves(min(self.row, self.column) + 1, lambda row, column, i: [row - i, column - i], defending, check_only, caller)
             +
-            self.get_line_moves(min(self.m_rows - self.row, self.column + 1), lambda row, column, i: [row + i, column - i], defending)
+            self.get_line_moves(min(self.m_rows - self.row, self.column + 1), lambda row, column, i: [row + i, column - i], defending, check_only, caller)
         )
         
-    def confirm_moves(self, attackable_cells=[], defending=False):
+    def confirm_moves(self, attackable_cells=[], defending=False, allowed_cells=[]):
         moves = self.moves
         matrix = self.matrix
         matrix_len = len(self.matrix) - 1
