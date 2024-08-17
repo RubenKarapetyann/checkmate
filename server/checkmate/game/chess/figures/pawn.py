@@ -1,5 +1,6 @@
 from .parents import FigureWithMovesCount
 from ..constants import BLACK, WHITE
+from .king import King
 
 class Pawn(FigureWithMovesCount):
     number = 1
@@ -54,7 +55,16 @@ class Pawn(FigureWithMovesCount):
                 
     def get_verified_moves(self):
         self.moves = self.get_moves()
+        allowed_cells = self.get_allowed_cells()
+        self.moves = self.confirm_moves(allowed_cells=allowed_cells)
     
     def get_cells_under_control(self):
         return self.get_attacking_moves()
+        
+    def get_check_cells(self, *args):
+        self.moves = self.get_attacking_moves()
+        if self.has_checked():
+            return [[self.row, self.column]]
+        else:
+            return []
         

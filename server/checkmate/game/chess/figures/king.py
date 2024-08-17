@@ -47,3 +47,6 @@ class King(FigureWithMovesCount):
                 
                 
         return cells
+    
+    def get_check_cells(self, *args):
+        return []
