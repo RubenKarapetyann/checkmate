@@ -28,9 +28,7 @@ class FigureBase:
         return self.matrix
     
     
-    def has_checked(self):
-        self.get_verified_moves()
-        
+    def has_checked(self):        
         for move in self.moves:
             cell = self.matrix[move[0]][move[1]]
             if cell and cell.number == 5 and cell.color != self.color: # King.number
@@ -109,9 +107,30 @@ class FigureBase:
             if len([cell for cell in attackable_cells if cell[0] == move[0] and cell[1] == move[1]]) > 0:
                 continue
             
+            if len(allowed_cells) > 0:
+                if not (len([cell for cell in allowed_cells if cell[0] == move[0] and cell[1] == move[1]]) > 0):
+                    continue
+                                
+            
             verified_moves.append(move)
             
         return verified_moves
+    
+
+    def get_allowed_cells(self):
+        cells = []
+        
+        for row in self.matrix:
+            for cell in row:
+                if cell == 0 or cell.color == self.color:
+                    continue
+                
+                cell.matrix = self.matrix
+                cells += cell.get_check_cells(self)
+                
+        return cells
+    
+            
         
     def __str__(self):
         return f"{self.color} {self.name}"
