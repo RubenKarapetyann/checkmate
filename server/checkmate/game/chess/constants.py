@@ -26,3 +26,8 @@ CHECK = "check"
 CHECKMATE = "checkmate"
 STALEMATE = "stalemate"
 REGULAR = "regular"
+
+# results
+WIN = "win"
+LOSE = "lose"
+DRAW = "draw"

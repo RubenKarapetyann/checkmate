@@ -14,7 +14,7 @@ from ..wbserializers import MatrixSerializer
 from users.models import User
 from websocket.utils import type_creater
 from ..chess.game import Chess
-from ..chess.constants import CHECKMATE, STALEMATE
+from ..chess.constants import CHECKMATE, STALEMATE, DRAW, LOSE, WIN
 
 class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -92,13 +92,19 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
                     self.group_name, 
                     type_creater("figure_move", {
                         "matrix" : new_matrix,
-                        "moves_count" : game.moves_count,
-                        "game_state" : game_state
+                        "moves_count" : game.moves_count
                     })
                 )
                     
                 if game_state in [STALEMATE, CHECKMATE]:
                     await sync_to_async(game.delete)()
+                    await self.channel_layer.group_send(
+                        self.group_name, 
+                        type_creater("game_finished", {
+                            "game_state" : game_state,
+                            "player" : user
+                        })
+                    )
                 
     
     async def figure_move(self, content, **kwargs):
@@ -109,6 +115,19 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
             "moves_count" : data["moves_count"]
         }))
         
-        if data["game_state"] in [STALEMATE, CHECKMATE]:
-            await self.close()
+            
+    async def game_finished(self, content, **kwargs):
+        data = content["data"]
+        player = data["player"]
+        user = self.scope["user"]
+        game_state = data["game_state"]
         
+        if game_state == STALEMATE:
+            result = DRAW
+        else:
+            result = WIN if player.id == user.id else LOSE
+        
+        return await self.send(sendParser(Actions.GAME_FINISHED, {
+            "game_state" : game_state,
+            "result" : result
+        }))
