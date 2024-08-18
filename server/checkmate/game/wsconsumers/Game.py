@@ -14,6 +14,7 @@ from ..wbserializers import MatrixSerializer
 from users.models import User
 from websocket.utils import type_creater
 from ..chess.game import Chess
+from ..chess.constants import CHECKMATE, STALEMATE
 
 class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -91,16 +92,23 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
                     self.group_name, 
                     type_creater("figure_move", {
                         "matrix" : new_matrix,
-                        "moves_count" : game.moves_count
+                        "moves_count" : game.moves_count,
+                        "game_state" : game_state
                     })
                 )
+                    
+                if game_state in [STALEMATE, CHECKMATE]:
+                    await sync_to_async(game.delete)()
+                
     
     async def figure_move(self, content, **kwargs):
         data = content["data"]
         
-        return await self.send(sendParser(Actions.FIGURE_MOVE, {
+        await self.send(sendParser(Actions.FIGURE_MOVE, {
             "matrix" : data["matrix"],
             "moves_count" : data["moves_count"]
         }))
         
+        if data["game_state"] in [STALEMATE, CHECKMATE]:
+            await self.close()
         
