@@ -81,7 +81,7 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
                     "moves": moves
                 }))
             case Actions.FIGURE_MOVE:
-                new_matrix = chess.move(data["row"], data["column"], data["to_row"], data["to_column"])
+                new_matrix, game_state = chess.move(data["row"], data["column"], data["to_row"], data["to_column"])
         
                 game.matrix = json.dumps(new_matrix, cls=MatrixSerializer)
                 game.moves_count = F("moves_count") + 1
