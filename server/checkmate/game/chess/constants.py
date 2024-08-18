@@ -20,3 +20,9 @@ DEFAULT_MATRIX = [
 
 # figures
 FIGURES_LINE = [4, 2, 3, 6, 5, 3, 2, 4]
+
+# state
+CHECK = "check"
+CHECKMATE = "checkmate"
+STALEMATE = "stalemate"
+REGULAR = "regular"
