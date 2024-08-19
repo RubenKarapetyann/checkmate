@@ -1,5 +1,5 @@
 import { BLACK, WHITE } from "../../constants/game"
-import { Matrix } from "../game/game"
+import { GameStates, Matrix, Results } from "../game/game"
 import { ActiveFigure } from "../redux/state"
 import { SocketDataBase } from "./global"
 
@@ -22,9 +22,20 @@ export type FigureMoveData = {
     moves_count : number
 }
 
+export type GameFinishedData = {
+    game_state : GameStates,
+    result : Results
+}
+
 export type GetActiveFigureMoves = ActiveFigure
 
-export type Data = GameFoundData | GameAcceptedData | GetActiveFigureMoves | MatrixUpdateData | FigureMoveData
+export type Data = 
+    GameFoundData | 
+    GameAcceptedData | 
+    GetActiveFigureMoves | 
+    MatrixUpdateData | 
+    FigureMoveData | 
+    GameFinishedData
 
 export interface SocketData extends SocketDataBase {
     data : Data
