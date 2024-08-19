@@ -14,6 +14,7 @@ from ..wbserializers import MatrixSerializer
 from users.models import User
 from websocket.utils import type_creater
 from ..chess.game import Chess
+from ..chess.constants import CHECKMATE, STALEMATE, DRAW, LOSE, WIN
 
 class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -81,7 +82,7 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
                     "moves": moves
                 }))
             case Actions.FIGURE_MOVE:
-                new_matrix = chess.move(data["row"], data["column"], data["to_row"], data["to_column"])
+                new_matrix, game_state = chess.move(data["row"], data["column"], data["to_row"], data["to_column"])
         
                 game.matrix = json.dumps(new_matrix, cls=MatrixSerializer)
                 game.moves_count = F("moves_count") + 1
@@ -94,13 +95,39 @@ class GameConsumer(SocketLoginRequiredMixin, AsyncJsonWebsocketConsumer):
                         "moves_count" : game.moves_count
                     })
                 )
+                    
+                if game_state in [STALEMATE, CHECKMATE]:
+                    await sync_to_async(game.delete)()
+                    await self.channel_layer.group_send(
+                        self.group_name, 
+                        type_creater("game_finished", {
+                            "game_state" : game_state,
+                            "player" : user
+                        })
+                    )
+                
     
     async def figure_move(self, content, **kwargs):
         data = content["data"]
         
-        return await self.send(sendParser(Actions.FIGURE_MOVE, {
+        await self.send(sendParser(Actions.FIGURE_MOVE, {
             "matrix" : data["matrix"],
             "moves_count" : data["moves_count"]
         }))
         
+            
+    async def game_finished(self, content, **kwargs):
+        data = content["data"]
+        player = data["player"]
+        user = self.scope["user"]
+        game_state = data["game_state"]
         
+        if game_state == STALEMATE:
+            result = DRAW
+        else:
+            result = WIN if player.id == user.id else LOSE
+        
+        return await self.send(sendParser(Actions.GAME_FINISHED, {
+            "game_state" : game_state,
+            "result" : result
+        }))
