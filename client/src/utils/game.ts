@@ -14,7 +14,8 @@ export const createMatrix = ()=>{
 }
 
 export const getMyMove = (movesCount: number | null, selfColor: Color | null)=>{
-    if(!movesCount || !selfColor) {
+    // movesCount migth be 0 what is falsy expression
+    if(movesCount === null || !selfColor) {
         return false
     }
     return (movesCount % 2 === 0 && selfColor === WHITE) || 
