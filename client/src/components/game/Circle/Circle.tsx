@@ -1,4 +1,4 @@
-import styles from "./Circle.module.css"
+import styles from "./Circle.module.scss"
 
 const Circle = ()=>(
     <div className={styles.container}>
