@@ -1,12 +1,13 @@
 import { Box, Container } from "@mui/material"
+import styles from "./GameHeader.module.scss"
 import GameHeaderLink from "../../links/GameHeaderLink/GameHeaderLink"
 import { GAME_HEADER_ITEMS } from "../../../constants/header"
 
 const GameHeader = ()=>{
     return (
-        <Box>
+        <Box className={styles.container}>
         <Container maxWidth="xl">
-            <Box>
+            <Box className={styles.content}>
                 {GAME_HEADER_ITEMS.map(section=>(
                     <GameHeaderLink 
                         path={section.path}
