@@ -1,7 +1,7 @@
 import { DARK_CELL, LIGHT_CELL } from "../../../constants/colors"
 import { RowProps } from "../../../types/game/component-types"
 import Cell from "../Cell/Cell"
-import styles from "./Row.module.css"
+import styles from "./Row.module.scss"
 
 const Row = ({ row, list, handle, reverse, activeCells }: RowProps)=>{
     return (

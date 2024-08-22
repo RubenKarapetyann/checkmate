@@ -1,0 +1,12 @@
+@import "../../../styles/mixins";
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.container {
+    height: 100px;
+    @include centred-flex;
+}

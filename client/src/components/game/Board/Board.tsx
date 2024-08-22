@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { BoardProps } from "../../../types/game/component-types";
-import styles from "./Board.module.css"
+import styles from "./Board.module.scss"
 import Row from "../Row/Row";
 
 const Board = ({ matrix, handle, reverse, activeCells }: BoardProps)=>{   

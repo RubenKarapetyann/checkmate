@@ -1,20 +1,22 @@
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import useSocket from "../hooks/socket/useSocket";
 import Board from "../components/game/Board/Board";
 import { useEffect } from "react";
-import { FIGURE_MOVE, GAME_ACCEPTED, GET_MOVES } from "../constants/actions";
+import { FIGURE_MOVE, GAME_ACCEPTED, GAME_FINISHED, GET_MOVES } from "../constants/actions";
 import { CellHandle } from "../types/game/component-types";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { deactivateFigure, figureMove, selectActiveFigure, selectColor, selectMatrix, selectMyMove, setActiveFigure, setInitialGameState } from "../features/game/gameSlice";
 import { WHITE } from "../constants/game";
-import { FigureMoveData, GameAcceptedData, GetActiveFigureMoves } from "../types/socket/receiveData";
+import { FigureMoveData, GameAcceptedData, GameFinishedData, GetActiveFigureMoves } from "../types/socket/receiveData";
 import { sendParser } from "../api/socket/parsers";
 import { ChosenFigure, FigureMove } from "../types/socket/sendData";
+import { HOME_PATH } from "../constants/paths";
 
 export default function Game(){
     const location = useLocation()
     const matrix = useAppSelector(selectMatrix)
     const selfColor = useAppSelector(selectColor)
+    const navigate = useNavigate()
     const activeFigure = useAppSelector(selectActiveFigure)
     const myMove = useAppSelector(selectMyMove)
     const { socket, listen } = useSocket("game", location.state.game_id)
@@ -29,6 +31,9 @@ export default function Game(){
         })
         listen<FigureMoveData>(FIGURE_MOVE, (data)=>{
             dispatch(figureMove(data))
+        })
+        listen<GameFinishedData>(GAME_FINISHED, (data)=>{
+            return navigate(HOME_PATH)
         })
     }, [socket])
 

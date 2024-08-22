@@ -1,6 +1,6 @@
 import { Box } from "@mui/material"
 import { CellProps } from "../../../types/game/component-types"
-import styles from "./Cell.module.css"
+import styles from "./Cell.module.scss"
 import { SERVER_URL } from "../../../constants/api"
 import Circle from "../Circle/Circle"
 
