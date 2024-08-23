@@ -1,0 +1,14 @@
+.container {
+    animation: spin infinite 1s;
+    width: 150px;
+    height: 150px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
