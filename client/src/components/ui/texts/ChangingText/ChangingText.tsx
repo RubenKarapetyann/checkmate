@@ -9,12 +9,12 @@ const ChangingText = ({ phraseList }: ChangingTextProps)=>{
         const intervalId = setInterval(()=>{
             const randomIndex = Math.floor(Math.random()*phraseList.length)
             setPhrase(phraseList[randomIndex])
-        }, 3000)
+        }, 5000)
         
         return ()=> clearInterval(intervalId)
     }, [])
 
-    return <p style={{ color : "white" }}>{phrase}</p>
+    return <p>{phrase}</p>
 }
 
 export default ChangingText
