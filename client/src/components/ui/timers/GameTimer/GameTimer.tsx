@@ -6,7 +6,7 @@ import styles from "./GameTimer.module.scss"
 
 const GameTimer = ({ time, onFinish }: GameTimerProps) => {
     const [seconds, setSeconds] = useState<number>(time)
-    const minutes = Math.floor(seconds / 60)
+    const date = new Date(seconds*1000)
 
     useEffect(()=>{
         const intervalId = setInterval(()=>{
@@ -27,7 +27,9 @@ const GameTimer = ({ time, onFinish }: GameTimerProps) => {
     return (
         <Box className={styles.container}>
             <AnimatedClock/>
-            <p>{minutes} : {seconds - minutes * 60}</p>
+            <p>
+                {String(date.getMinutes()).padStart(2, "0")} : {String(date.getSeconds()).padStart(2, "0")}
+            </p>
         </Box>
     )
 }

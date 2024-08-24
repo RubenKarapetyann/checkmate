@@ -9,12 +9,12 @@
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        border: 5px solid $white;
+        border: 5px solid $black;
         position: relative;
         box-sizing: border-box;
         @include centred-flex;
         justify-content: flex-start;
-        animation: rotating 3s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+        animation: rotating 4s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
         padding: 5px;
     }
 
@@ -22,7 +22,7 @@
         content: "";
         width: 25px;
         height: 5px;
-        background-color: $white;
+        background-color: $black;
         border-radius: 2px;
     }
 }
