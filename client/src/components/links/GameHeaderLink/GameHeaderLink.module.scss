@@ -1,19 +1,15 @@
-@import "../../../styles/palette";
 @import "../../../styles/mixins";
 
 .link {
     width: 200px;
     height: 70px;
-    background-color: $gold;
-    border-radius: 30px;
     padding: 5px;
     transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 
     @include centred-flex;
 
     p {
-        color: $white;
-        font-size: 25px;
+        font-size: 30px;
         font-weight: bold;
     }
 
@@ -25,11 +21,7 @@
     }
 
     img {
-        width: 35px;
-    }
-
-    &:hover {
-        background-color: $secondary;
+        width: 40px;
     }
 }
 
