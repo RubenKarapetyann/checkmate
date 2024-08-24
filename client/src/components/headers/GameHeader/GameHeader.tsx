@@ -1,6 +1,6 @@
 import { Box, Container } from "@mui/material"
 import styles from "./GameHeader.module.scss"
-import GameHeaderLink from "../../links/GameHeaderLink/GameHeaderLink"
+import GameHeaderLink from "../../ui/links/GameHeaderLink/GameHeaderLink"
 import { GAME_HEADER_ITEMS } from "../../../constants/header"
 
 const GameHeader = ()=>{

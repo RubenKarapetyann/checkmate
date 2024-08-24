@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import { GameHeaderLinkProps } from "../../../types/components/links"
+import { GameHeaderLinkProps } from "../../../../types/components/links"
 import styles from "./GameHeaderLink.module.scss"
 import { Button } from "@mui/material"
 

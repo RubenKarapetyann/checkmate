@@ -10,8 +10,8 @@ const MainHeader = ()=>{
                 <Box className={styles.content}>
                     <Box><img src="/images/logo/logo48.svg" alt="logo"/></Box>
                     <Box sx={{ gap : "5px", display : "flex" }}>
-                        <Button component={Link} to={LOGIN_PATH} variant="contained">Sign in</Button>
-                        <Button component={Link} to={"/"} variant="outlined">Sign up</Button>
+                        <Button component={Link} to={LOGIN_PATH} variant="outlined">Sign in</Button>
+                        <Button component={Link} to={"/"} variant="contained">Sign up</Button>
                     </Box>
                 </Box>
             </Container>
