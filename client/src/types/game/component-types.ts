@@ -27,3 +27,7 @@ export type BoardProps = {
     reverse : boolean,
     activeCells? : Array<Array<number>> | null
 }
+
+export type FunctionalBoardProps = {
+    send : (data:string) => void
+}
