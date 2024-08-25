@@ -1,11 +1,12 @@
 import { GameHeaderItem } from "../types/components/headers"
+import { FIGHT_PATH } from "./paths"
 
 export const FIGHT_SECTION = "fight"
 export const FIGHT: GameHeaderItem = {
     displayName : "Fight",
     name : FIGHT_SECTION,
     id : 1,
-    path : "/",
+    path : FIGHT_PATH,
     icon : "images/icons/fight.svg"
 }
 
