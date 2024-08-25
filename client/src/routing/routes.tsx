@@ -6,35 +6,32 @@ import Lobby from "../pages/Lobby"
 import Game from "../pages/Game"
 import Fight from "../pages/Fight"
 
-const TEST: RouteObject = {
+export const TEST: RouteObject = {
     element : <p>test</p>,
     path : TEST_PATH
 }
 
-const HOME: RouteObject = {
+export const HOME: RouteObject = {
     element : <Home/>,
     path : HOME_PATH
 }
 
-const LOGIN: RouteObject = {
+export const LOGIN: RouteObject = {
     element : <Login/>,
     path : LOGIN_PATH
 }
 
-const LOBBY: RouteObject = {
+export const LOBBY: RouteObject = {
     element : <Lobby/>,
     path : LOBBY_PATH
 }
 
-const GAME: RouteObject = {
+export const GAME: RouteObject = {
     element : <Game/>,
     path : GAME_PATH
 }
 
-const FIGHT: RouteObject = {
+export const FIGHT: RouteObject = {
     element : <Fight/>,
     path : FIGHT_PATH
 }
-
-const ROUTES = [TEST, HOME, LOGIN, LOBBY, GAME, FIGHT]
-export default ROUTES
