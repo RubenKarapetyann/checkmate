@@ -5,3 +5,9 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ("username", "level", "coins", "money", "rating", "image")
+        
+
+class OpponentSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "level", "rating", "image")
