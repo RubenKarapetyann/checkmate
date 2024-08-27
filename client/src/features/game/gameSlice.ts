@@ -3,7 +3,7 @@ import { ActiveFigure, GameState } from '../../types/redux/state';
 import { RootState } from '../../app/store';
 import { Matrix } from '../../types/game/game';
 import { FigureMoveData, GameAcceptedData } from '../../types/socket/receiveData';
-import { getMyMove } from '../../utils/game';
+import { getMyMove } from '../../utils/game/game';
 
 const name = "game"
 const initialState: GameState = {

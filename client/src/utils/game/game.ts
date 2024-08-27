@@ -1,5 +1,5 @@
-import { BLACK, MATRIX_SIZE, WHITE } from "../constants/game"
-import { Color, Matrix } from "../types/game/game"
+import { BLACK, MATRIX_SIZE, WHITE } from "../../constants/game"
+import { Color, Matrix } from "../../types/game/game"
 
 export const createMatrix = ()=>{
     const matrix: Matrix = []
